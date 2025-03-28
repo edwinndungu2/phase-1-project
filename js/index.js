@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const songs = [
-        { title: "Blinding Lights", artist: "The Weeknd", album: "After Hours", image: "images/blinding-lights.jpg" },
-        { title: "Shape of You", artist: "Ed Sheeran", album: "Divide", image: "images/shape-of-you.jpg" },
-        { title: "Uptown Funk", artist: "Mark Ronson ft. Bruno Mars", album: "Uptown Special", image: "images/uptown-funk.jpg" },
-        { title: "Someone Like You", artist: "Adele", album: "21", image: "images/someone-like-you.jpg" },
-        { title: "God's Plan", artist: "Drake", album: "Scorpion", image: "images/gods-plan.jpg" }
+        { title: "Blinding Lights", artist: "The Weeknd", album: "After Hours", image: "images/blindinglights.jpeg" },
+        { title: "Shape of You", artist: "Ed Sheeran", album: "Divide", image: "images/shapeofyou.png" },
+        { title: "Uptown Funk", artist: "Mark Ronson ft. Bruno Mars", album: "Uptown Special", image: "images/uptownfunk.jpeg" },
+        { title: "Someone Like You", artist: "Adele", album: "21", image: "images/someonelikeyou.jpeg" },
+        { title: "God's Plan", artist: "Drake", album: "Scorpion", image: "images/godsplan.png" }
     ];
 
     function searchSongs() {
