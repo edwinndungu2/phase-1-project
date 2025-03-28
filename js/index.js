@@ -1,45 +1,58 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const songs = [
-        { title: "Blinding Lights", artist: "The Weeknd", album: "After Hours", image: "images/blindinglights.jpeg" },
-        { title: "Shape of You", artist: "Ed Sheeran", album: "Divide", image: "images/shapeofyou.png" },
-        { title: "Uptown Funk", artist: "Mark Ronson ft. Bruno Mars", album: "Uptown Special", image: "images/uptownfunk.jpeg" },
-        { title: "Someone Like You", artist: "Adele", album: "21", image: "images/someonelikeyou.jpeg" },
-        { title: "God's Plan", artist: "Drake", album: "Scorpion", image: "images/godsplan.png" }
-    ];
+    fetchSongs();
+});
 
-    function searchSongs() {
-        const searchTerm = document.getElementById("search").value.toLowerCase();
-        const songList = document.getElementById("song-list");
-        songList.innerHTML = "";
+function fetchSongs() {
+    fetch("http://localhost:3000/songs")
+        .then(response => response.json())
+        .then(songs => displaySongs(songs))
+        .catch(error => console.error("Error fetching songs:", error));
+}
 
-        const filteredSongs = songs.filter(song =>
-            song.title.toLowerCase().includes(searchTerm) || 
-            song.artist.toLowerCase().includes(searchTerm) ||
-            song.album.toLowerCase().includes(searchTerm)
-        );
+function searchSongs() {
+    const searchTerm = document.getElementById("search").value.toLowerCase();
 
-        if (filteredSongs.length > 0) {
-            filteredSongs.forEach(song => {
-                const li = document.createElement("li");
-                li.classList.add("song-item");
+    fetch("http://localhost:3000/songs")
+        .then(response => response.json())
+        .then(songs => {
+            const filteredSongs = songs.filter(song =>
+                song.title.toLowerCase().includes(searchTerm) ||
+                song.artist.toLowerCase().includes(searchTerm) ||
+                song.album.toLowerCase().includes(searchTerm)
+            );
+            displaySongs(filteredSongs);
+        })
+        .catch(error => console.error("Error fetching songs:", error));
+}
 
-                const img = document.createElement("img");
-                img.src = song.image;
-                img.alt = song.title;
-                img.classList.add("song-image");
+function displaySongs(songs) {
+    const songList = document.getElementById("song-list");
+    songList.innerHTML = "";
 
-                const details = document.createElement("div");
-                details.innerHTML = `<strong>${song.title}</strong> - ${song.artist} (${song.album})`;
-
-                li.appendChild(img);
-                li.appendChild(details);
-                songList.appendChild(li);
-            });
-        } else {
-            songList.innerHTML = '<li class="no-results">No results found</li>';
-        }
+    if (songs.length === 0) {
+        songList.innerHTML = "<li>No songs found</li>";
+        return;
     }
 
-    document.getElementById("search").addEventListener("input", searchSongs);
-    document.querySelector("button").addEventListener("click", searchSongs);
-});
+    songs.forEach(song => {
+        const li = document.createElement("li");
+
+        const img = document.createElement("img");
+        img.src = song.image;
+        img.alt = song.title;
+        img.width = 100;
+
+        const details = document.createElement("div");
+        details.innerHTML = `<strong>${song.title}</strong> - ${song.artist} (${song.album})`;
+
+        const viewButton = document.createElement("a");
+        viewButton.href = song.link;
+        viewButton.target = "_blank";
+        viewButton.textContent = "View Song";
+
+        li.appendChild(img);
+        li.appendChild(details);
+        li.appendChild(viewButton);
+        songList.appendChild(li);
+    });
+}

@@ -5,13 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Song Search</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/index.js" defer></script>
+    <script src="js/index.js"></script>
 </head>
 <body>
-    <h1>Song Search</h1>
-    <input type="text" id="search" placeholder="Search for a song...">
-    <button onclick="searchSongs()">Search</button>
+    <header>
+        <h1>🎵 Song Explorer</h1>
+        <p>Search for your favorite songs and discover more music.</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for a song...">
+        <button onclick="searchSongs()">🔍 Search</button>
+    </div>
+
     <ul id="song-list"></ul>
+
+    <footer>
+        <p>🎧 Powered by Edwin Production | <a href="#">About</a> | <a href="#">Contact</a></p>
+    </footer>
+
     <script src="js/script.js"></script>
 </body>
 </html>
+
