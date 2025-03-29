@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("search");
     const songList = document.getElementById("song-list");
+    const clearButton = document.getElementById("clear-search");
 
-    
     function fetchSongs() {
         fetch("http://localhost:3000/songs")
             .then(response => response.json())
@@ -10,9 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(error => console.error("Error fetching songs:", error));
     }
 
-    
     function displaySongs(songs) {
-        songList.innerHTML = ""; 
+        songList.innerHTML = "";
 
         if (songs.length === 0) {
             songList.innerHTML = "<p>No songs found</p>";
@@ -47,5 +46,29 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(error => console.error("Error searching songs:", error));
     });
 
-    fetchSongs(); 
+    
+    clearButton.addEventListener("click", () => {
+        searchInput.value = "";
+        fetchSongs(); 
+    });
+
+    
+    searchInput.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const query = searchInput.value.toLowerCase();
+            fetch("http://localhost:3000/songs")
+                .then(response => response.json())
+                .then(data => {
+                    const filteredSongs = data.filter(song =>
+                        song.title.toLowerCase().includes(query) ||
+                        song.artist.toLowerCase().includes(query)
+                    );
+                    displaySongs(filteredSongs);
+                })
+                .catch(error => console.error("Error searching songs:", error));
+        }
+    });
+
+    fetchSongs();
 });
