@@ -1,58 +1,51 @@
-document.addEventListener("DOMContentLoaded", function () {
-    fetchSongs();
-});
-
-function fetchSongs() {
-    fetch("http://localhost:3000/songs")
-        .then(response => response.json())
-        .then(songs => displaySongs(songs))
-        .catch(error => console.error("Error fetching songs:", error));
-}
-
-function searchSongs() {
-    const searchTerm = document.getElementById("search").value.toLowerCase();
-
-    fetch("http://localhost:3000/songs")
-        .then(response => response.json())
-        .then(songs => {
-            const filteredSongs = songs.filter(song =>
-                song.title.toLowerCase().includes(searchTerm) ||
-                song.artist.toLowerCase().includes(searchTerm) ||
-                song.album.toLowerCase().includes(searchTerm)
-            );
-            displaySongs(filteredSongs);
-        })
-        .catch(error => console.error("Error fetching songs:", error));
-}
-
-function displaySongs(songs) {
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("search");
     const songList = document.getElementById("song-list");
-    songList.innerHTML = "";
 
-    if (songs.length === 0) {
-        songList.innerHTML = "<li>No songs found</li>";
-        return;
+    
+    function fetchSongs() {
+        fetch("http://localhost:3000/songs")
+            .then(response => response.json())
+            .then(data => displaySongs(data))
+            .catch(error => console.error("Error fetching songs:", error));
     }
 
-    songs.forEach(song => {
-        const li = document.createElement("li");
+    
+    function displaySongs(songs) {
+        songList.innerHTML = ""; 
 
-        const img = document.createElement("img");
-        img.src = song.image;
-        img.alt = song.title;
-        img.width = 100;
+        if (songs.length === 0) {
+            songList.innerHTML = "<p>No songs found</p>";
+            return;
+        }
 
-        const details = document.createElement("div");
-        details.innerHTML = `<strong>${song.title}</strong> - ${song.artist} (${song.album})`;
+        songs.forEach(song => {
+            const songItem = document.createElement("li");
+            songItem.innerHTML = `
+                <img src="${song.image}" alt="${song.title}" width="100">
+                <h3>${song.title}</h3>
+                <p><strong>Artist:</strong> ${song.artist}</p>
+                <p><strong>Album:</strong> ${song.album}</p>
+                <a href="${song.link}" target="_blank">View Song</a>
+            `;
+            songList.appendChild(songItem);
+        });
+    }
 
-        const viewButton = document.createElement("a");
-        viewButton.href = song.link;
-        viewButton.target = "_blank";
-        viewButton.textContent = "View Song";
-
-        li.appendChild(img);
-        li.appendChild(details);
-        li.appendChild(viewButton);
-        songList.appendChild(li);
+    
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+        fetch("http://localhost:3000/songs")
+            .then(response => response.json())
+            .then(data => {
+                const filteredSongs = data.filter(song =>
+                    song.title.toLowerCase().includes(query) ||
+                    song.artist.toLowerCase().includes(query)
+                );
+                displaySongs(filteredSongs);
+            })
+            .catch(error => console.error("Error searching songs:", error));
     });
-}
+
+    fetchSongs(); 
+});
